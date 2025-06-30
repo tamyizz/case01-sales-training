@@ -1,0 +1,74 @@
+# Case Study 02 – Housing Price Analysis
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import scipy.stats as stats
+
+# Simulasi data (10 rumah)
+data = {
+    'SalePrice': [200000, 180000, 250000, 220000, 270000, 210000, 190000, 300000, 150000, 230000],
+    'GrLivArea': [1500, 1400, 2000, 1800, 2200, 1600, 1450, 2400, 1300, 1700],
+    'GarageArea': [400, 380, 500, 450, 550, 420, 390, 600, 350, 410],
+    'PoolArea': [0, 0, 0, 0, 250, 0, 0, 0, 0, 0],
+    'Utilities': ['AllPub', 'AllPub', 'AllPub', 'AllPub', 'NoSeWa', 'AllPub', 'AllPub', 'AllPub', 'NoSeWa', 'AllPub'],
+    'HouseStyle': ['1Story', '2Story', '1Story', '2Story', '1.5Fin', '1Story', '2Story', '2Story', '1Story', 'SLvl'],
+    'ExterQual': ['Gd', 'TA', 'Gd', 'Ex', 'TA', 'Gd', 'TA', 'Ex', 'TA', 'Gd']
+}
+
+df = pd.DataFrame(data)
+
+# =========================
+# Statistik & Distribusi
+# =========================
+print("Rata-rata Harga Rumah:", df['SalePrice'].mean())
+print("Skewness Harga Rumah:", df['SalePrice'].skew())
+
+# =========================
+# Visualisasi 1D
+# =========================
+
+# Kategorikal - Bar Plot
+for col in ['Utilities', 'HouseStyle', 'ExterQual']:
+    sns.countplot(x=df[col])
+    plt.title(f'Distribusi {col}')
+    plt.xticks(rotation=45)
+    plt.show()
+
+# Numerikal - Histogram
+for col in ['SalePrice', 'GrLivArea', 'PoolArea']:
+    plt.hist(df[col], bins=8, color='skyblue', edgecolor='black')
+    plt.title(f'Histogram {col}')
+    plt.xlabel(col)
+    plt.ylabel('Jumlah')
+    plt.show()
+
+# =========================
+# Transformasi Log10
+# =========================
+df['LogSalePrice'] = np.log10(df['SalePrice'])
+df['LogGrLivArea'] = np.log10(df['GrLivArea'])
+
+# =========================
+# Visualisasi 2D - Scatter
+# =========================
+plt.scatter(df['GrLivArea'], df['SalePrice'])
+plt.title('GrLivArea vs SalePrice')
+plt.xlabel('GrLivArea')
+plt.ylabel('SalePrice')
+plt.show()
+
+plt.scatter(df['GarageArea'], df['SalePrice'])
+plt.title('GarageArea vs SalePrice')
+plt.xlabel('GarageArea')
+plt.ylabel('SalePrice')
+plt.show()
+
+# =========================
+# Korelasi
+# =========================
+corr1 = df['GrLivArea'].corr(df['SalePrice'])
+corr2 = df['GarageArea'].corr(df['SalePrice'])
+
+print("Korelasi GrLivArea vs SalePrice:", corr1)
+print("Korelasi GarageArea vs SalePrice:", corr2)
